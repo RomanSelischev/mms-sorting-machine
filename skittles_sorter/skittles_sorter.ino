@@ -6,11 +6,24 @@
 #define IN2 9
 #define IN3 10
 #define IN4 11
+
+#define IN5 2
+#define IN6 3
+#define IN7 4
+#define IN8 12
+
+#define YELLOW 0
+#define ORANGE 72
+#define GREEN 144
+#define PURPLE 216
+#define RED 288
 // To-do:
 // MODE to work in different modes
 
-AccelStepper stepper(8, IN1, IN3, IN2, IN4);
+int currentAngle = 0;
 
+AccelStepper stepper(8, IN1, IN3, IN2, IN4);
+AccelStepper stepperGiver(8, IN5, IN7, IN6, IN8);
 
 void setup(){
   Serial.begin(9600);
@@ -49,6 +62,9 @@ void setup(){
   stepper.runToPosition();
   stepper.setMaxSpeed(1024.0);
   stepper.setAcceleration(1024.0);
+
+  stepperGiver.setMaxSpeed(1024.0);
+  stepperGiver.setAcceleration(1024.0);
   delay(2000);
 }
 
@@ -128,9 +144,67 @@ String classify()
 
 }
 
+long findMinAngle(int colorAngle) {
+  int angle = currentAngle - colorAngle;
+
+  if (abs(angle) > abs(angle + 360)) {
+    return (long)((angle + 360) * 11.37);
+  }
+  return (long)(angle * 11.37);
+}
+
 void setRotator(String color)
 {
-  // заглушка  поворота мотора на будущее
+  Serial.println("Im in rotator");
+  if (color == "Yellow") {
+    Serial.println("yellow angle");
+    Serial.println(findMinAngle(YELLOW));
+    
+    stepperGiver.move(findMinAngle(YELLOW));    
+    stepperGiver.runToPosition();
+
+    currentAngle = YELLOW;
+  }
+  
+  if (color == "Orange") {
+    Serial.println("orange angle");
+    Serial.println(findMinAngle(ORANGE));
+    
+    stepperGiver.move(findMinAngle(ORANGE));    
+    stepperGiver.runToPosition();
+
+    currentAngle = ORANGE;
+  }
+  
+  if (color == "Green") {
+    Serial.println("green angle");
+    Serial.println(findMinAngle(GREEN));
+    
+    stepperGiver.move(findMinAngle(GREEN));    
+    stepperGiver.runToPosition();
+
+    currentAngle = GREEN;
+  }
+
+  if (color == "Purple") {
+    Serial.println("purple angle");
+    Serial.println(findMinAngle(PURPLE));
+    
+    stepperGiver.move(findMinAngle(PURPLE));    
+    stepperGiver.runToPosition();
+
+    currentAngle = PURPLE;
+  }
+
+  if (color == "Red") {
+    Serial.println("red angle");
+    Serial.println(findMinAngle(RED));
+    
+    stepperGiver.move(findMinAngle(RED));    
+    stepperGiver.runToPosition();
+
+    currentAngle = RED;
+  }
   return;
 }
 
