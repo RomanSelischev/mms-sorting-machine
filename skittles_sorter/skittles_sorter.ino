@@ -13,12 +13,12 @@
 #define IN8 12
 
 #define YELLOW 0
-#define ORANGE 72
-#define GREEN 144
-#define PURPLE 216
-#define RED 288
+#define ORANGE 30
+#define GREEN 60
+#define PURPLE 90
+#define RED 120
 
-#define WORKMODE false
+#define WORKMODE true
 
 int currentAngle = 0;
 
@@ -101,7 +101,7 @@ String classify()
   // blue is not in use btw
 
   // output to IDE's `Serial Monitor`
-  if (!WORKMODE)
+  if (WORKMODE)
   {
     Serial.print(red);
     Serial.print(" ");
@@ -157,16 +157,14 @@ String classify()
 }
 
 long findMinAngle(int colorAngle) {
-  int angle = currentAngle - colorAngle;
-
-  if (abs(angle) > abs(angle + 360)) {
-    return (long)((angle + 360) * 11.37);
-  }
+  int angle = colorAngle - currentAngle;
+  
   return (long)(angle * 11.37);
 }
 
 void setRotator(String color)
 {
+  stepperGiver.enableOutputs();
   Serial.println("Im in rotator");
   if (color == "Yellow") {
     Serial.println("yellow angle");
@@ -217,6 +215,7 @@ void setRotator(String color)
 
     currentAngle = RED;
   }
+  stepperGiver.disableOutputs();
   return;
 }
 
