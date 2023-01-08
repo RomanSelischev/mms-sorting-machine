@@ -17,15 +17,16 @@
 #define GREEN 144
 #define PURPLE 216
 #define RED 288
-// To-do:
-// MODE to work in different modes
+
+#define WORKMODE false
 
 int currentAngle = 0;
 
 AccelStepper stepper(8, IN1, IN3, IN2, IN4);
 AccelStepper stepperGiver(8, IN5, IN7, IN6, IN8);
 
-void setup(){
+void setup()
+{
   Serial.begin(9600);
 
   // set speed for calibration
@@ -68,21 +69,28 @@ void setup(){
   delay(2000);
 }
 
-void loop()
+void moveRotator()
 {
-  String color = classify();
-  Serial.println(color);
-
-  if (color != "None") {
-    setRotator(color);
-  }
-
   stepper.move(522);
   stepper.runToPosition();
   stepper.move(90);
   stepper.runToPosition();
   stepper.move(-100);
   stepper.runToPosition();
+}
+
+void loop()
+{
+  String color = classify();
+  Serial.println(color);
+
+  if (WORKMODE)
+  {
+    if (color != "None") {
+      setRotator(color);
+    }
+    moveRotator();
+  }
 }
 
 String classify()
@@ -93,11 +101,15 @@ String classify()
   // blue is not in use btw
 
   // output to IDE's `Serial Monitor`
-  Serial.print(red);
-  Serial.print(" ");
-  Serial.print(green);
-  Serial.print(" ");
-  Serial.println(blue);
+  if (!WORKMODE)
+  {
+    Serial.print(red);
+    Serial.print(" ");
+    Serial.print(green);
+    Serial.print(" ");
+    Serial.print(blue);
+    Serial.print(" ");
+  }
 
   // green or purple
   if (550 < red && red <= 620)
