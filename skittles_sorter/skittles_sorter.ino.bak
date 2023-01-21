@@ -19,13 +19,11 @@
 #define RED 120
 
 #define WORKMODE true
-// if false stepper motors won't be used
-// and serial will have detailed output
+
+int currentAngle = 0;
 
 AccelStepper stepper(8, IN1, IN3, IN2, IN4);
 AccelStepper stepperGiver(8, IN5, IN7, IN6, IN8);
-
-int currentAngle = 0;
 
 void setup()
 {
@@ -73,7 +71,6 @@ void setup()
 
 void moveRotator()
 {
-  // moves rotator one step
   stepper.move(522);
   stepper.runToPosition();
   stepper.move(90);
@@ -90,7 +87,7 @@ void loop()
   if (WORKMODE)
   {
     if (color != "None") {
-      setGyver(color);
+      setRotator(color);
     }
     moveRotator();
   }
@@ -98,8 +95,6 @@ void loop()
 
 String classify()
 {
-  // classifies color 
-  // returns classified color
   int red = getLightness(255, 0, 0, 500);
   int green = getLightness(0, 255, 0, 500);
   int blue = getLightness(0, 0, 255, 500);
@@ -161,17 +156,14 @@ String classify()
 
 }
 
-long findMinAngle(int colorAngle)
-{
-  // calculates angle to rotate
+long findMinAngle(int colorAngle) {
   int angle = colorAngle - currentAngle;
   
   return (long)(angle * 11.37);
 }
 
-void setGyver(String color)
+void setRotator(String color)
 {
-  // rotates gyver based on input color
   stepperGiver.enableOutputs();
   Serial.println("Im in rotator");
   if (color == "Yellow") {
@@ -229,7 +221,7 @@ void setGyver(String color)
 
 void setColor(int r, int g, int b)
 {
-  // sets color to (r, g, b)
+  // устанавливает цвет светодиода
   analogWrite(ROUT, r);
   analogWrite(GOUT, g);
   analogWrite(BOUT, b);
@@ -237,16 +229,13 @@ void setColor(int r, int g, int b)
 
 int getLightness()
 {
-  // returns current lightness
+  // измеряет текущую освещенность
   return analogRead(A3);
 }
 
 int getLightness(int r, int g, int b, int measureDelay)
 {
-  // args: r, g, b - ints from 0 to 255 desribing color
-  // measureDelay - delay before measuring lightness
-  // turns on RGB light (and off after work)
-  // returns lighntess measured after delay
+  // измеряет освещенность цветом после задержки
   setColor(r, g, b);
   delay(measureDelay);
   int lightness = getLightness();
