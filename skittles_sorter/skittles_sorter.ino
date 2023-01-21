@@ -90,7 +90,7 @@ void loop()
   if (WORKMODE)
   {
     if (color != "None") {
-      setGyver(color);
+      setGiver(color);
     }
     moveRotator();
   }
@@ -169,7 +169,7 @@ long findMinAngle(int colorAngle)
   return (long)(angle * 11.37);
 }
 
-void setGyver(String color)
+void setGiver(String color)
 {
   // rotates gyver based on input color
   stepperGiver.enableOutputs();
